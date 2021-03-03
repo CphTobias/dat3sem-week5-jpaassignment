@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.insession.jpaassignment.entities;
 
 import java.io.Serializable;
@@ -17,10 +12,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-/**
- *
- * @author tobiaszimmermann
- */
 @Entity
 public class Person implements Serializable {
 
@@ -56,20 +47,12 @@ public class Person implements Serializable {
         this.styles = new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
-        return "Person{" + "personId=" + personId + ", name=" + name + ", year=" + year + '}';
-    }
 
     public void setAddress(Address address) {
-        this.address = address;
         if (address != null) {
+            this.address = address;
             address.setPerson(this);
         }
-    }
-
-    public List<Fee> getFees() {
-        return fees;
     }
 
     public void addFee(Fee fee) {
@@ -91,6 +74,15 @@ public class Person implements Serializable {
             styles.remove(swimStyle);
             swimStyle.getPersons().remove(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" + "personId=" + personId + ", name=" + name + ", year=" + year + '}';
+    }
+
+    public List<Fee> getFees() {
+        return fees;
     }
 
     public List<SwimStyle> getStyles() {

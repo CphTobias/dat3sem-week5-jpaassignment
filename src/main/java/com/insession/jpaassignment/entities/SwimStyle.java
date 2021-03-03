@@ -29,6 +29,15 @@ public class SwimStyle implements Serializable {
         this.persons = new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        return "SwimStyle{" +
+            "id=" + id +
+            ", styleName='" + styleName + '\'' +
+            ", persons=" + persons +
+            '}';
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
