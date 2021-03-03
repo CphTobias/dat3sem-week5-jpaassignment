@@ -2,6 +2,7 @@ package com.insession.jpaassignment.entities;
 
 import com.insession.jpaassignment.dtos.PersonFeesDTO;
 import com.insession.jpaassignment.dtos.PersonSwimStyleDTO;
+import com.insession.jpaassignment.entities.PersonTeam.SwimmerLevel;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -98,6 +99,24 @@ public class Tester {
 
         Integer heighestFee = (Integer) em.createQuery("SELECT MAX(f.amount) FROM Fee f").getSingleResult();
         System.out.println("Highest Fee: " + heighestFee);
+
+        //Inserting after creation of the link_person_team table
+        Team team1 = new Team("Bobs team");
+        Team team2 = new Team("Bob2s team");
+
+        person1.addTeam(team1, SwimmerLevel.HIGH);
+        person2.addTeam(team2, SwimmerLevel.LOW);
+
+        em.getTransaction().begin();
+        em.persist(team1);
+        em.persist(team2);
+        em.getTransaction().commit();
+
+        List<PersonTeam> highLevelPersonTeams = em.createQuery("SELECT pt FROM PersonTeam pt WHERE pt.level = :level", PersonTeam.class)
+            .setParameter("level", SwimmerLevel.HIGH)
+            .getResultList();
+
+        highLevelPersonTeams.forEach(System.out::println);
 
         em.close();
     }

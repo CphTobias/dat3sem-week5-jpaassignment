@@ -1,28 +1,40 @@
 package com.insession.jpaassignment.entities;
 
+import com.insession.jpaassignment.entities.PersonTeam.SwimmerLevel;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "person")
 public class Person implements Serializable {
 
     private static final long serialVersionUID = -3332224278644415795L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "personId")
     private Long personId;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "year")
     private int year;
 
     @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "addressId")
     private Address address;
 
     @OneToMany(
@@ -37,6 +49,9 @@ public class Person implements Serializable {
     )
     private List<SwimStyle> styles;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PersonTeam> teams;
+
     public Person() {
     }
 
@@ -45,6 +60,7 @@ public class Person implements Serializable {
         this.year = year;
         this.fees = new ArrayList<>();
         this.styles = new ArrayList<>();
+        this.teams = new ArrayList<>();
     }
 
 
@@ -76,6 +92,27 @@ public class Person implements Serializable {
         }
     }
 
+    public void addTeam(Team team, SwimmerLevel swimmerLevel) {
+        if (team != null) {
+            PersonTeam personTeam = new PersonTeam(this, team, swimmerLevel);
+            teams.add(personTeam);
+            team.getPersons().add(personTeam);
+        }
+    }
+
+    public void removeTeam(Team team) {
+        Iterator<PersonTeam> iterator = teams.iterator();
+
+        while (iterator.hasNext()) {
+            PersonTeam pt = iterator.next();
+            if (pt.getPerson().equals(this) && pt.getTeam().equals(team)){
+                iterator.remove();   // fjernes fra teams i personens arrayliste
+                pt.getTeam().getPersons().remove(pt);  // fjern person fra teamets person arrayliste
+            }
+
+        }
+    }
+
     @Override
     public String toString() {
         return "Person{" + "personId=" + personId + ", name=" + name + ", year=" + year + '}';
@@ -89,6 +126,9 @@ public class Person implements Serializable {
         return styles;
     }
 
+    public List<PersonTeam> getTeams() {
+        return teams;
+    }
 
     public Long getPersonId() {
         return personId;

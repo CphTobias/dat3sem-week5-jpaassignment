@@ -6,6 +6,8 @@
     <class>com.insession.jpaassignment.entities.Address</class>
     <class>com.insession.jpaassignment.entities.Fee</class>
     <class>com.insession.jpaassignment.entities.SwimStyle</class>
+    <class>com.insession.jpaassignment.entities.PersonTeam</class>
+    <class>com.insession.jpaassignment.entities.Team</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jpademo_jon?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="dev"/>
